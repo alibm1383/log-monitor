@@ -1,0 +1,10 @@
+2021-07-12 01:22:42,114 [main] INFO com.example.auth.LoginService – User admin logged in successfully
+2021-07-12 01:22:43,201 [main] ERROR com.example.auth.LoginService – Login failed for user guest: invalid password
+2021-07-12 01:22:45,530 [pool-2-thread-1] WARNING com.example.db.ConnectionPool – Connection pool near capacity: 18/20 connections in use
+2021-07-12 01:22:47,812 [pool-2-thread-3] ERROR com.example.db.ConnectionPool – Failed to acquire connection: timeout after 30s
+2021-07-12 01:22:50,004 [scheduler-1] INFO com.example.jobs.CleanupJob – Starting scheduled cleanup task
+2021-07-12 01:22:50,998 [scheduler-1] INFO com.example.jobs.CleanupJob – Cleanup task completed: 42 records removed
+2021-07-12 01:22:55,120 [http-nio-8080-exec-2] ERROR com.example.api.OrderController – Unhandled exception while processing order 10293
+2021-07-12 01:23:01,340 [http-nio-8080-exec-5] WARNING com.example.api.RateLimiter – Rate limit threshold approaching for client 192.168.1.15
+2021-07-12 01:23:05,750 [main] INFO com.example.core.Application – Application started on port 8080
+2021-07-12 01:23:10,412 [pool-2-thread-1] ERROR com.example.db.ConnectionPool – Connection lost unexpectedly, attempting reconnect
