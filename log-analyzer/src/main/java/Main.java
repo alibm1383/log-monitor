@@ -1,7 +1,7 @@
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -30,24 +30,30 @@ public class Main {
             int logs = 0;
             int malformed = 0;
 
-            String threadName,level,logger,msg;
+            String thread,level,logger,message;
             LocalDateTime dateTime;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss,SSS");
 
 
             while ((line = reader.readLine()) != null) {
+                System.out.println(line);
                 lines++;
                 try
                 {
                     String[] parts = line.split(" – ", 2);
                     String[] details = parts[0].split(" ");
-                    msg = parts[1].trim();
+                    message = parts[1].trim();
                     String date = details[0];
                     String time = details[1];
                     dateTime = LocalDateTime.parse(date+" "+time,formatter);
-                    threadName = details[2];
+                    thread = details[2];
                     level = details[3];
                     logger = details[4];
+                    String component = extractComponent(filePath);
+                    logs++;
+                    LogEntry log = new LogEntry(component,dateTime,thread,level,logger,message);
+
+
                 }
                 catch (Exception e)
                 {
@@ -59,4 +65,11 @@ public class Main {
             System.out.println("Error reading file: " + e.getMessage());
         }
     }
+
+    private static String extractComponent(String filePath) {
+        String fileName = new File(filePath).getName();
+        int dotIndex = fileName.lastIndexOf('.');
+        return dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
+    }
+
 }
