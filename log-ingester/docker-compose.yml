@@ -16,5 +16,4 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_CLUSTER_ID: '4L6g3nShT-eMCtK--X86sw'
-      # محدود کردن رم به ۵۱۲ مگابایت برای سبک ماندن سیستم
       KAFKA_HEAP_OPTS: "-Xmx512m -Xms256m"
