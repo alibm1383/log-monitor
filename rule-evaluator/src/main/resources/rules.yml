@@ -1,0 +1,15 @@
+rules:
+  - name: log-level-alert
+    type: LOG_LEVEL
+    level: ERROR
+
+  - name: component-error-rate
+    type: COMPONENT_LOG_RATE
+    level: ERROR
+    windowSeconds: 300
+    threshold: 5
+
+  - name: overall-log-rate
+    type: OVERALL_LOG_RATE
+    windowSeconds: 300
+    threshold: 50

@@ -1,1 +1,2 @@
-2021-07-12 01:22:42,114 [MainThread] INFO com.sahab.auth.LoginService – User login successful
+2021-07-12 01:22:42,114 [MainThread] ERROR com.sahab.auth.LoginService – User login Failed
+2021-07-12 01:22:42,114 [MainThread] ERROR com.sahab.auth.LoginService – User login Failed Error
