@@ -83,7 +83,6 @@ public class Main {
                     ProducerRecord<String, String> record = new ProducerRecord<>(topic, component, json);
                     producer.send(record).get();
                     System.out.println("JSON: " + json);
-
                 }
                 //ArrayIndex , DateTimeParse , kafkaError
                 catch (Exception e)
