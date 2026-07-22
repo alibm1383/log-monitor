@@ -1,4 +1,10 @@
-2021-07-12 01:22:42,114 [MainThread] INFO com.sahab.auth.LoginService – User login successful
-2021-07-12 01:22:43,201 [MainThread] ERROR com.sahab.auth.LoginService – Authentication completed
-2021-07-12 01:22:42,114 [MainThread] INFO com.sahab.auth.LoginService – User login successful
-2021-07-12 01:22:43,201 [MainThread] ERROR com.sahab.auth.LoginService – Authentication completed
+2026-07-22 10:00:00,000 [main] INFO com.example.orders.OrderService – Order 1001 created
+2026-07-22 10:00:10,000 [main] INFO com.example.orders.OrderService – Order 1002 created
+2026-07-22 10:00:20,000 [main] INFO com.example.orders.OrderService – Failed to charge card for order 1002
+2026-07-22 10:00:30,000 [main] INFO com.example.orders.OrderService – Order 1003 created
+2026-07-22 10:00:35,000 [main] INFO com.example.orders.OrderService – Order 1004 created
+2026-07-22 10:00:40,000 [main] INFO com.example.orders.OrderService – Order 1005 created
+2026-07-22 10:02:30,000 [main] INFO com.example.orders.OrderService – Order 1006 created
+2026-07-22 10:02:35,000 [main] INFO com.example.orders.OrderService – Order 1007 created
+2026-07-22 10:02:40,000 [main] INFO com.example.orders.OrderService – Failed to charge card for order 1007
+2026-07-22 10:02:50,000 [main] INFO com.example.orders.OrderService – Order 1008 created

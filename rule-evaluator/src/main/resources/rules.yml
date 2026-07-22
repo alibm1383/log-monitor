@@ -20,5 +20,5 @@ rules:
   - name: overall-log-rate
     type: OVERALL_LOG_RATE
     windowSeconds: 300
-    threshold: 50
-    coolDown: 100
+    threshold: 3
+    coolDown: 6

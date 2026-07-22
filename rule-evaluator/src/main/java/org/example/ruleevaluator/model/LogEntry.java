@@ -13,7 +13,7 @@ public class LogEntry {
     public LogEntry() {}
 
     public LogEntry(String component, LocalDateTime timestamp, String thread,
-                    String level, String logger, String message , int cooldown) {
+                    String level, String logger, String message) {
         this.component = component;
         this.timestamp = timestamp;
         this.thread = thread;

@@ -26,6 +26,7 @@ public class LogConsumer {
     private final AlertRepository alertRepository;
     private final List<RuleDefinition> rules = new ArrayList<>();
     private final Map<String, Deque<LogEntry>> componentOverallHistory = new ConcurrentHashMap<>();
+    private final Map<String, Deque<LogEntry>> componentLevelHistory = new ConcurrentHashMap<>();
     private final Map<String, LocalDateTime> lastAlertTime = new ConcurrentHashMap<>();
 
     public LogConsumer(AlertRepository alertRepository) {
@@ -86,23 +87,62 @@ public class LogConsumer {
         for (RuleDefinition rule : rules) {
             switch (rule.getType()) {
                 case LOG_LEVEL -> checkLogLevel(rule, entry);
-                //case COMPONENT_LOG_RATE -> checkComponentLogRateRule(rule, entry);
-                case OVERALL_LOG_RATE -> checkOverallLogRateRule(rule, entry);
+                case COMPONENT_LOG_RATE -> checkComponentLogRate(rule, entry);
+                case OVERALL_LOG_RATE -> checkOverallLogRate(rule, entry);
             }
         }
     }
 
-    void checkLogLevel(RuleDefinition rule ,LogEntry log)
-    {
-        if (log.getLevel() != null && log.getLevel().equalsIgnoreCase(rule.getLevel()))
-        {
+    void checkLogLevel(RuleDefinition rule, LogEntry log) {
+        if (log.getLevel() != null && log.getLevel().equalsIgnoreCase(rule.getLevel())) {
             Alert alert = new Alert
-                    (rule.getName(),log.getComponent(),log.getMessage(), LocalDateTime.now());
+                    (rule.getName(), log.getComponent(), log.getMessage(), LocalDateTime.now());
             alertRepository.save(alert);
         }
     }
 
-    private synchronized void checkOverallLogRateRule(RuleDefinition rule, LogEntry entry) {
+    private synchronized void checkComponentLogRate(RuleDefinition rule, LogEntry entry)
+    {
+        if (!rule.getLevel().equalsIgnoreCase(entry.getLevel()))
+        {
+            return;
+        }
+        String component = entry.getComponent();
+        String level = entry.getLevel();
+        String key = component + "|" + level;
+
+        Deque<LogEntry> history;
+
+        if (componentLevelHistory.containsKey(key)) {
+            history = componentLevelHistory.get(key);
+        } else {
+            history = new ArrayDeque<>();
+            componentLevelHistory.put(key, history);
+        }
+
+        history.addLast(entry);
+        pruneOldEntries(history,entry.getTimestamp(), rule.getWindowSeconds());
+
+        if (history.size() > rule.getThreshold())
+        {
+            String alertKey = rule.getName() + ":" + key;
+            if (isCoolDownPassed(alertKey,entry.getTimestamp(),rule.getCoolDown()))
+            {
+                double ratePerMinute = (history.size() * 60.0) / rule.getWindowSeconds();
+                String lastTwoMessages = getLastTwoMessages(history);
+                String description = String.format(
+                        "Log rate for level %s on component %s: %.2f logs/min (%d logs in %d seconds).\nLast messages: %s",
+                        rule.getLevel(), component, ratePerMinute, history.size(),
+                        rule.getWindowSeconds(), lastTwoMessages
+                );
+                Alert alert = new Alert(rule.getName(),component,description,LocalDateTime.now());
+                alertRepository.save(alert);
+                lastAlertTime.put(alertKey,entry.getTimestamp());
+            }
+        }
+    }
+
+    private synchronized void checkOverallLogRate(RuleDefinition rule, LogEntry entry) {
         String component = entry.getComponent();
         Deque<LogEntry> history;
 
@@ -114,6 +154,7 @@ public class LogConsumer {
         }
 
         history.addLast(entry);
+        System.out.println(history.size());
         pruneOldEntries(history, entry.getTimestamp(), rule.getWindowSeconds());
 
         if (history.size() > rule.getThreshold()) {
@@ -132,6 +173,7 @@ public class LogConsumer {
             }
         }
     }
+
 
     private void pruneOldEntries(Deque<LogEntry> history , LocalDateTime now , int windowSeconds)
     {
@@ -154,5 +196,23 @@ public class LogConsumer {
             return true;
         }
         return Duration.between(lastAlert,now).getSeconds() >= coolDown;
+    }
+
+    private String getLastTwoMessages(Deque<LogEntry> history)
+    {
+        Iterator<LogEntry> iterator = history.descendingIterator();
+
+        String last = "";
+        String secondFromLast = "";
+
+        if (iterator.hasNext())
+        {
+            last = iterator.next().getMessage();
+        }
+        if (iterator.hasNext())
+        {
+            secondFromLast = iterator.next().getMessage();
+        }
+        return last + "\n" + secondFromLast;
     }
 }
