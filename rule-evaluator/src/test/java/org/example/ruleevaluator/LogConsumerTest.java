@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
@@ -19,13 +20,15 @@ import static org.mockito.Mockito.*;
 class LogConsumerTest {
 
     private AlertRepository alertRepository;
+    private KafkaTemplate<String, String> kafkaTemplate;
     private LogConsumer consumer;
     private final LocalDateTime base = LocalDateTime.of(2026, 7, 22, 10, 0, 0);
 
     @BeforeEach
     void setUp() {
         alertRepository = mock(AlertRepository.class);
-        consumer = new LogConsumer(alertRepository);
+        kafkaTemplate = mock(KafkaTemplate.class);
+        consumer = new LogConsumer(alertRepository,kafkaTemplate);
     }
 
     private LogEntry entry(String component, String level, LocalDateTime timestamp, String message) {

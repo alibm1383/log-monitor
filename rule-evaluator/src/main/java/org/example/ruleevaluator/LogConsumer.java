@@ -23,17 +23,20 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class LogConsumer {
 
+    private static final String DLQ_TOPIC = "raw-logs-dlq";
     private final ObjectMapper mapper;
     private final AlertRepository alertRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
     private final List<RuleDefinition> rules = new ArrayList<>();
     private final Map<String, Deque<LogEntry>> componentOverallHistory = new ConcurrentHashMap<>();
     private final Map<String, Deque<LogEntry>> componentLevelHistory = new ConcurrentHashMap<>();
     private final Map<String, LocalDateTime> lastAlertTime = new ConcurrentHashMap<>();
 
-    public LogConsumer(AlertRepository alertRepository) {
+    public LogConsumer(AlertRepository alertRepository, KafkaTemplate<String, String> kafkaTemplate) {
         this.mapper = new ObjectMapper();
         this.mapper.registerModule(new JavaTimeModule());
         this.alertRepository = alertRepository;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @KafkaListener(topics = "raw-logs", groupId = "rule-evaluator-group")
@@ -43,6 +46,7 @@ public class LogConsumer {
             evaluateRules(entry);
             System.out.println(message);
         } catch (Exception e) {
+            sendToDlq(message, e);
             e.printStackTrace();
         }
     }
@@ -216,5 +220,20 @@ public class LogConsumer {
             secondFromLast = iterator.next().getMessage();
         }
         return last + "\n" + secondFromLast;
+    }
+
+    private void sendToDlq(String message, Exception e) {
+        try {
+            Map<String, Object> dlqPayload = new HashMap<>();
+            dlqPayload.put("message", message);
+            dlqPayload.put("error", e.getClass().getSimpleName() + ": " + e.getMessage());
+            dlqPayload.put("failedAt", LocalDateTime.now().toString());
+
+            String dlqJson = mapper.writeValueAsString(dlqPayload);
+            kafkaTemplate.send(DLQ_TOPIC, dlqJson);
+        } catch (Exception sendEx) {
+            System.err.println("Failed to send to DLQ: " + sendEx.getMessage());
+            sendEx.printStackTrace();
+        }
     }
 }
