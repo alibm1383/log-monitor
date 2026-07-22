@@ -149,7 +149,6 @@ class MainTest {
 
         assertFalse(Files.exists(logFile));
     }
-
     @Test
     void processFile_handlesMixOfValidAndInvalidLines() throws IOException {
         Path logFile = tempDir.resolve("serviceA_2025-07-01.log");

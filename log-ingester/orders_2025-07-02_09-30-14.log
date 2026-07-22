@@ -1,4 +1,4 @@
-2026-07-2210:00:00,000 [main] INFO com.example.orders.OrderService – Order 1001 created
+2026-07-22 10:00:00,000 [main] INFO com.example.orders.OrderService – Order 1001 created
 2026-07-22 10:00:05,000 [main] INFO com.example.orders.OrderService – Order 1002 created
 2026-07-22 10:00:10,000 [main] INFO com.example.orders.OrderService – Order 1003 created
 2026-07-22 10:00:15,000 [main] INFO com.example.orders.OrderService – Order 1004 created

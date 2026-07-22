@@ -83,7 +83,7 @@ public class LogConsumer {
         }
     }
 
-    private void evaluateRules(LogEntry entry) {
+     void evaluateRules(LogEntry entry) {
         for (RuleDefinition rule : rules) {
             switch (rule.getType()) {
                 case LOG_LEVEL -> checkLogLevel(rule, entry);
@@ -101,15 +101,16 @@ public class LogConsumer {
         }
     }
 
-    private synchronized void checkComponentLogRate(RuleDefinition rule, LogEntry entry)
+     synchronized void checkComponentLogRate(RuleDefinition rule, LogEntry entry)
     {
         if (!rule.getLevel().equalsIgnoreCase(entry.getLevel()))
         {
             return;
         }
+        String ruleName = rule.getName();
         String component = entry.getComponent();
         String level = entry.getLevel();
-        String key = component + "|" + level;
+        String key = ruleName+"|"+component + "|" + level;
 
         Deque<LogEntry> history;
 
@@ -125,8 +126,7 @@ public class LogConsumer {
 
         if (history.size() > rule.getThreshold())
         {
-            String alertKey = rule.getName() + ":" + key;
-            if (isCoolDownPassed(alertKey,entry.getTimestamp(),rule.getCoolDown()))
+            if (isCoolDownPassed(key,entry.getTimestamp(),rule.getCoolDown()))
             {
                 double ratePerMinute = (history.size() * 60.0) / rule.getWindowSeconds();
                 String lastTwoMessages = getLastTwoMessages(history);
@@ -137,20 +137,22 @@ public class LogConsumer {
                 );
                 Alert alert = new Alert(rule.getName(),component,description,LocalDateTime.now());
                 alertRepository.save(alert);
-                lastAlertTime.put(alertKey,entry.getTimestamp());
+                lastAlertTime.put(key,entry.getTimestamp());
             }
         }
     }
 
-    private synchronized void checkOverallLogRate(RuleDefinition rule, LogEntry entry) {
+     synchronized void checkOverallLogRate(RuleDefinition rule, LogEntry entry) {
+        String ruleName = rule.getName();
         String component = entry.getComponent();
+        String key = ruleName+"|"+component;
         Deque<LogEntry> history;
 
-        if (componentOverallHistory.containsKey(component)) {
-            history = componentOverallHistory.get(component);
+        if (componentOverallHistory.containsKey(key)) {
+            history = componentOverallHistory.get(key);
         } else {
             history = new ArrayDeque<>();
-            componentOverallHistory.put(component, history);
+            componentOverallHistory.put(key, history);
         }
 
         history.addLast(entry);
@@ -158,9 +160,8 @@ public class LogConsumer {
         pruneOldEntries(history, entry.getTimestamp(), rule.getWindowSeconds());
 
         if (history.size() > rule.getThreshold()) {
-            String alertKey = rule.getName() + ":" + component;
 
-            if (isCoolDownPassed(alertKey, entry.getTimestamp(), rule.getCoolDown())) {
+            if (isCoolDownPassed(key, entry.getTimestamp(), rule.getCoolDown())) {
                 double ratePerMinute = (history.size() * 60.0) / rule.getWindowSeconds();
                 String description = String.format(
                         "Overall log rate for component %s: %.2f logs/min (%d logs in %d seconds)",
@@ -169,13 +170,13 @@ public class LogConsumer {
                 Alert alert = new Alert
                         (rule.getName(),entry.getComponent(),description, LocalDateTime.now());
                 alertRepository.save(alert);
-                lastAlertTime.put(alertKey, entry.getTimestamp());
+                lastAlertTime.put(key, entry.getTimestamp());
             }
         }
     }
 
 
-    private void pruneOldEntries(Deque<LogEntry> history , LocalDateTime now , int windowSeconds)
+     void pruneOldEntries(Deque<LogEntry> history , LocalDateTime now , int windowSeconds)
     {
         while (!history.isEmpty()) {
             LogEntry oldest = history.peek();
@@ -188,7 +189,7 @@ public class LogConsumer {
         }
     }
 
-    private boolean isCoolDownPassed(String alertKey , LocalDateTime now , int coolDown)
+     boolean isCoolDownPassed(String alertKey , LocalDateTime now , int coolDown)
     {
         LocalDateTime lastAlert = lastAlertTime.get(alertKey);
         if (lastAlert == null)
@@ -198,7 +199,7 @@ public class LogConsumer {
         return Duration.between(lastAlert,now).getSeconds() >= coolDown;
     }
 
-    private String getLastTwoMessages(Deque<LogEntry> history)
+     String getLastTwoMessages(Deque<LogEntry> history)
     {
         Iterator<LogEntry> iterator = history.descendingIterator();
 
