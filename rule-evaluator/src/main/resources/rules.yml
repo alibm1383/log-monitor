@@ -21,4 +21,3 @@ rules:
     type: OVERALL_LOG_RATE
     windowSeconds: 300
     threshold: 3
-    coolDown: 10
