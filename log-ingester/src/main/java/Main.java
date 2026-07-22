@@ -96,6 +96,9 @@ public class Main {
                     writer.write(line + "\n" + "Exception : " + e.getMessage() + "\n\n");
                     System.out.println(line);
                     e.printStackTrace();
+
+                    System.out.println("Malformed line:");
+                    System.out.println(line);
                 }
             }
 

@@ -1,4 +1,13 @@
 2026-07-22 10:00:00,000 [main] INFO com.example.users.UserService – User signup started
-2026-07-22 10:00:10,000 [main] INFO com.example.users.UserService – User signup completed
-2026-07-22 10:00:20,000 [main] WARNING com.example.users.UserService – Slow response from auth provider
-2026-07-22 10:00:23,000 [main] WARNING com.example.users.UserService – Slow response from auth provider
+2026-07-22 10:00:05,000 [main] INFO com.example.users.UserService – User validation completed
+2026-07-22 10:00:10,000 [main] INFO com.example.users.UserService – User profile loaded
+2026-07-22 10:00:15,000 [main] INFO com.example.users.UserService – User preferences loaded
+2026-07-22 10:00:20,000 [main] INFO com.example.users.UserService – User signup completed
+2026-07-22 10:00:25,000 [main] INFO com.example.users.UserService – Welcome email queued
+2026-07-22 10:01:00,000 [main] ERROR com.example.users.UserService – Database connection failed
+2026-07-22 10:01:20,000 [main] ERROR com.example.users.UserService – Authentication service unavailable
+2026-07-22 10:01:40,000 [main] ERROR com.example.users.UserService – Failed to save user
+2026-07-22 10:02:00,000 [main] ERROR com.example.users.UserService – Cache timeout
+2026-07-22 10:02:20,000 [main] ERROR com.example.users.UserService – Unexpected exception
+2026-07-22 10:02:40,000 [main] ERROR com.example.users.UserService – Retry limit exceeded
+2026-07-22 10:06:20,000 [main] ERROR com.example.users.UserService – New error after window expired

@@ -1,10 +1,16 @@
 2026-07-22 10:00:00,000 [main] INFO com.example.orders.OrderService – Order 1001 created
-2026-07-22 10:00:10,000 [main] INFO com.example.orders.OrderService – Order 1002 created
-2026-07-22 10:00:20,000 [main] INFO com.example.orders.OrderService – Failed to charge card for order 1002
-2026-07-22 10:00:30,000 [main] INFO com.example.orders.OrderService – Order 1003 created
-2026-07-22 10:00:35,000 [main] INFO com.example.orders.OrderService – Order 1004 created
-2026-07-22 10:00:40,000 [main] INFO com.example.orders.OrderService – Order 1005 created
-2026-07-22 10:02:30,000 [main] INFO com.example.orders.OrderService – Order 1006 created
-2026-07-22 10:02:35,000 [main] INFO com.example.orders.OrderService – Order 1007 created
-2026-07-22 10:02:40,000 [main] INFO com.example.orders.OrderService – Failed to charge card for order 1007
-2026-07-22 10:02:50,000 [main] INFO com.example.orders.OrderService – Order 1008 created
+2026-07-22 10:00:05,000 [main] INFO com.example.orders.OrderService – Order 1002 created
+2026-07-22 10:00:10,000 [main] INFO com.example.orders.OrderService – Order 1003 created
+2026-07-22 10:00:15,000 [main] INFO com.example.orders.OrderService – Order 1004 created
+2026-07-22 10:00:20,000 [main] INFO com.example.orders.OrderService – Order 1005 created
+2026-07-22 10:00:25,000 [main] INFO com.example.orders.OrderService – Order 1006 created
+2026-07-22 10:00:30,000 [main] INFO com.example.orders.OrderService – Order 1007 created
+2026-07-22 10:00:32,000 [main] INFO com.example.orders.OrderService – Order 1008 created
+2026-07-22 10:00:50,000 [main] ERROR com.example.orders.OrderService – Failed to charge card
+2026-07-22 10:00:50,000 [main] ERROR com.example.orders.OrderService – Failed to reserve inventory
+2026-07-22 10:01:00,000 [main] ERROR com.example.orders.OrderService – Payment gateway timeout
+2026-07-22 10:01:10,000 [main] ERROR com.example.orders.OrderService – Failed to generate invoice
+2026-07-22 10:01:20,000 [main] ERROR com.example.orders.OrderService – Failed to update shipment
+2026-07-22 10:01:30,000 [main] ERROR com.example.orders.OrderService – Order rollback failed
+2026-07-22 10:06:00,000 [main] INFO com.example.orders.OrderService – Order 1009 created
+2026-07-22 10:07:10,000 [main] INFO com.example.orders.OrderService – Order 1010 created

@@ -1,3 +1,6 @@
-2021-07-12 01:22:42,114[MainThread] INFO com.sahab.auth.LoginService – User login successful
-Exception : Text '2021-07-12 01:22:42,114[MainThread]' could not be parsed, unparsed text found at index 23
+
+Exception : Index 1 out of bounds for length 1
+
+
+Exception : Index 1 out of bounds for length 1
 
