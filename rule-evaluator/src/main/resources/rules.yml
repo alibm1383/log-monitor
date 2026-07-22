@@ -1,24 +1,34 @@
 rules:
-  - name: log-level-alert
+  - name: log-level-error
     type: LOG_LEVEL
     level: ERROR
 
-  - name: component-error-rate
+  - name: log-level-warning
+    type: LOG_LEVEL
+    level: WARNING
+
+  - name: component-error-rate1
     type: COMPONENT_LOG_RATE
     level: ERROR
-    windowSeconds: 300
-    threshold: 5
+    windowSeconds: 60
+    threshold: 3
     coolDown: 30
 
-  - name: component-info-rate
+  - name: component-error-rate2
     type: COMPONENT_LOG_RATE
-    level: INFO
-    windowSeconds: 60
-    threshold: 5
-    coolDown: 10
+    level: ERROR
+    windowSeconds: 30
+    threshold: 2
+    coolDown: 15
 
-  - name: overall-log-rate
+  - name: overall-log-rate1
     type: OVERALL_LOG_RATE
     windowSeconds: 300
-    threshold: 3
-    coolDown: 10
+    threshold: 8
+    coolDown: 30
+
+  - name: overall-log-rate2
+    type: OVERALL_LOG_RATE
+    windowSeconds: 60
+    threshold: 5
+    coolDown: 20

@@ -18,9 +18,14 @@ public class LogController {
     public LogController(AlertRepository alertRepository) {
         this.alertRepository = alertRepository;
     }
+    @Operation(
+            summary = "Get all alerts",
+            description = "Returns all alerts ordered by creation time in descending order."
+    )
     @GetMapping
     public ResponseEntity<List<Alert>> getAlerts()
     {
-        return ResponseEntity.ok(alertRepository.findAll(Sort.by(Sort.Direction.DESC,"CreatedAt")));
+        return ResponseEntity.ok(
+                alertRepository.findAll(Sort.by(Sort.Direction.DESC,"createdAt")));
     }
 }

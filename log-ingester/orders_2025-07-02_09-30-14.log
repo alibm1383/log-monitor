@@ -4,6 +4,7 @@
 2026-07-22 10:00:15,000 [main] INFO com.example.orders.OrderService – Order 1004 created
 2026-07-22 10:00:20,000 [main] INFO com.example.orders.OrderService – Order 1005 created
 2026-07-22 10:00:25,000 [main] INFO com.example.orders.OrderService – Order 1006 created
+2026-07-22 10:00:27,000 [main] WARNING com.example.orders.OrderService – Slow response from payment gateway
 2026-07-22 10:00:30,000 [main] INFO com.example.orders.OrderService – Order 1007 created
 2026-07-22 10:00:32,000 [main] INFO com.example.orders.OrderService – Order 1008 created
 2026-07-22 10:00:50,000 [main] ERROR com.example.orders.OrderService – Failed to charge card
@@ -12,5 +13,9 @@
 2026-07-22 10:01:10,000 [main] ERROR com.example.orders.OrderService – Failed to generate invoice
 2026-07-22 10:01:20,000 [main] ERROR com.example.orders.OrderService – Failed to update shipment
 2026-07-22 10:01:30,000 [main] ERROR com.example.orders.OrderService – Order rollback failed
+2026-07-22 10:03:50,000 [main] ERROR com.example.orders.OrderService – Database connection lost
+2026-07-22 10:04:00,000 [main] ERROR com.example.orders.OrderService – Database connection lost again
+2026-07-22 10:04:10,000 [main] ERROR com.example.orders.OrderService – Database write failed
+2026-07-22 10:04:20,000 [main] ERROR com.example.orders.OrderService – Database read failed
 2026-07-22 10:06:00,000 [main] INFO com.example.orders.OrderService – Order 1009 created
 2026-07-22 10:07:10,000 [main] INFO com.example.orders.OrderService – Order 1010 created

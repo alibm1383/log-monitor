@@ -10,6 +10,7 @@ import org.example.ruleevaluator.model.RuleType;
 import org.example.ruleevaluator.repository.AlertRepository;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 
