@@ -14,17 +14,19 @@ import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class LogConsumer {
 
     private final ObjectMapper mapper;
     private final AlertRepository alertRepository;
-    private List<RuleDefinition> rules = new ArrayList<>();
+    private final List<RuleDefinition> rules = new ArrayList<>();
+    private final Map<String, Deque<LogEntry>> componentOverallHistory = new ConcurrentHashMap<>();
+    private final Map<String, LocalDateTime> lastAlertTime = new ConcurrentHashMap<>();
 
     public LogConsumer(AlertRepository alertRepository) {
         this.mapper = new ObjectMapper();
@@ -68,6 +70,10 @@ public class LogConsumer {
                     rule.setThreshold((Integer) raw.get("threshold"));
                 }
 
+                if (raw.get("coolDown") != null) {
+                    rule.setCoolDown((Integer) raw.get("coolDown"));
+                }
+
                 rules.add(rule);
             }
 
@@ -81,7 +87,7 @@ public class LogConsumer {
             switch (rule.getType()) {
                 case LOG_LEVEL -> checkLogLevel(rule, entry);
                 //case COMPONENT_LOG_RATE -> checkComponentLogRateRule(rule, entry);
-                //case OVERALL_LOG_RATE -> checkOverallLogRateRule(rule, entry);
+                case OVERALL_LOG_RATE -> checkOverallLogRateRule(rule, entry);
             }
         }
     }
@@ -96,4 +102,57 @@ public class LogConsumer {
         }
     }
 
+    private synchronized void checkOverallLogRateRule(RuleDefinition rule, LogEntry entry) {
+        String component = entry.getComponent();
+        Deque<LogEntry> history;
+
+        if (componentOverallHistory.containsKey(component)) {
+            history = componentOverallHistory.get(component);
+        } else {
+            history = new ArrayDeque<>();
+            componentOverallHistory.put(component, history);
+        }
+
+        history.addLast(entry);
+        pruneOldEntries(history, entry.getTimestamp(), rule.getWindowSeconds());
+
+        if (history.size() > rule.getThreshold()) {
+            String alertKey = rule.getName() + ":" + component;
+
+            if (isCoolDownPassed(alertKey, entry.getTimestamp(), rule.getCoolDown())) {
+                double ratePerMinute = (history.size() * 60.0) / rule.getWindowSeconds();
+                String description = String.format(
+                        "Overall log rate for component %s: %.2f logs/min (%d logs in %d seconds)",
+                        component, ratePerMinute, history.size(), rule.getWindowSeconds()
+                );
+                Alert alert = new Alert
+                        (rule.getName(),entry.getComponent(),description, LocalDateTime.now());
+                alertRepository.save(alert);
+                lastAlertTime.put(alertKey, entry.getTimestamp());
+            }
+        }
+    }
+
+    private void pruneOldEntries(Deque<LogEntry> history , LocalDateTime now , int windowSeconds)
+    {
+        while (!history.isEmpty()) {
+            LogEntry oldest = history.peek();
+            long secondsDiff = Duration.between(oldest.getTimestamp(), now).getSeconds();
+            if (secondsDiff > windowSeconds) {
+                history.pollFirst();
+            } else {
+                break;
+            }
+        }
+    }
+
+    private boolean isCoolDownPassed(String alertKey , LocalDateTime now , int coolDown)
+    {
+        LocalDateTime lastAlert = lastAlertTime.get(alertKey);
+        if (lastAlert == null)
+        {
+            return true;
+        }
+        return Duration.between(lastAlert,now).getSeconds() >= coolDown;
+    }
 }

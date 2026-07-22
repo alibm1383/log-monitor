@@ -7,6 +7,8 @@ public class RuleDefinition {
     private int windowSeconds;
     private int threshold;
 
+    private int coolDown;
+
     public String getName() {
         return name;
     }
@@ -45,5 +47,13 @@ public class RuleDefinition {
 
     public void setThreshold(int threshold) {
         this.threshold = threshold;
+    }
+
+    public int getCoolDown() {
+        return coolDown;
+    }
+
+    public void setCoolDown(int coolDown) {
+        this.coolDown = coolDown;
     }
 }

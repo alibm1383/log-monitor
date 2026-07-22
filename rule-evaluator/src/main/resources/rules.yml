@@ -8,8 +8,17 @@ rules:
     level: ERROR
     windowSeconds: 300
     threshold: 5
+    coolDown: 150
+
+  - name: component-info-rate
+    type: COMPONENT_LOG_RATE
+    level: INFO
+    windowSeconds: 60
+    threshold: 5
+    coolDown: 10
 
   - name: overall-log-rate
     type: OVERALL_LOG_RATE
     windowSeconds: 300
     threshold: 50
+    coolDown: 100
